@@ -30,7 +30,7 @@ const ResetPassword: React.FC = () => {
         <Container>
             <Content>
                 <AnimatedContainer>
-                    <img src={logoImg} alt="Logo do aplicativo"></img>
+                    <img src={logoImg} alt="Logo do aplicativo" />
 
                     <form
                         onSubmit={handleSubmit(async ({ password, password_confirmation }) => {

@@ -1,23 +1,21 @@
-import { yupResolver } from '@hookform/resolvers';
-import React, { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
-import { FiLock, FiLogIn, FiMail } from 'react-icons/fi';
-import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
-import logoImg from '../../assets/logo.svg';
-import Button from '../../components/button';
-import Input from '../../components/input';
-import { useAuth } from '../../hooks/AuthContext';
-import { useToast } from '../../hooks/ToastContext';
-import {
-    Background, Container, Content, AnimatedContainer,
-} from './styles';
+import { yupResolver } from "@hookform/resolvers";
+import React, { useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { FiLock, FiLogIn, FiMail } from "react-icons/fi";
+import * as Yup from "yup";
+import { Link } from "react-router-dom";
+import logoImg from "../../assets/logo.svg";
+import Button from "../../components/button";
+import Input from "../../components/input";
+import { useAuth } from "../../hooks/AuthContext";
+import { useToast } from "../../hooks/ToastContext";
+import { Background, Container, Content, AnimatedContainer } from "./styles";
 
 const schema = Yup.object().shape({
     email: Yup.string()
-        .email('Entre com um email válido.')
-        .required('Email é um campo obrigatório.'),
-    password: Yup.string().required('A senha é um campo obrigatório.'),
+        .email("Entre com um email válido.")
+        .required("Email é um campo obrigatório."),
+    password: Yup.string().required("A senha é um campo obrigatório."),
 });
 
 interface FormAuthenticationData {
@@ -39,10 +37,10 @@ const SignIn: React.FC = () => {
                 await signIn({ email, password });
             } catch (err) {
                 addToast({
-                    title: 'Erro na autencicacao',
-                    type: 'error',
+                    title: "Erro na autencicacao",
+                    type: "error",
                     description:
-                        'Aconteceu algum erro no servidor ao tentar se conectar.',
+                        "Aconteceu algum erro no servidor ao tentar se conectar.",
                 });
             }
         },
@@ -82,7 +80,7 @@ const SignIn: React.FC = () => {
 
                     <Link to="/signup">
                         <FiLogIn />
-              Criar conta
+                        Criar conta
                     </Link>
                 </AnimatedContainer>
             </Content>

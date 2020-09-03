@@ -18,16 +18,19 @@ const schema = yup.object().shape({
         .email("Entre com um email válido.")
         .required("Email é um campo obrigatório."),
     oldPassword: yup.string(),
-    password: yup.string().when('oldPassword', {
+    password: yup.string().when("oldPassword", {
         is: val => !!val.length,
         then: yup.string().required("Campo obrigatório"),
         otherwise: yup.string(),
     }),
-    password_confirmation: yup.string().when("oldPassword", {
-        is: val => !!val.length,
-        then: yup.string().required("Campo obrigatório"),
-        otherwise: yup.string()
-    }).oneOf([yup.ref("password"), undefined], "Senhas nao batem")
+    password_confirmation: yup
+        .string()
+        .when("oldPassword", {
+            is: val => !!val.length,
+            then: yup.string().required("Campo obrigatório"),
+            otherwise: yup.string(),
+        })
+        .oneOf([yup.ref("password"), undefined], "Senhas nao batem"),
 });
 
 interface ProfileProps {
@@ -47,23 +50,30 @@ const Profile: React.FC = () => {
     const { errors, handleSubmit, register } = useForm({
         defaultValues: {
             name: user.name,
-            email: user.email
+            email: user.email,
         },
         resolver: yupResolver(schema),
     });
 
     async function handleFormSubmit(data: ProfileProps) {
-
-
-        const { name, email, password, oldPassword, password_confirmation } = data;
+        const {
+            name,
+            email,
+            password,
+            oldPassword,
+            password_confirmation,
+        } = data;
 
         const formData = {
             email,
-            name, ...(oldPassword ? {
-                oldPassword,
-                password,
-                password_confirmation
-            } : {})
+            name,
+            ...(oldPassword
+                ? {
+                    oldPassword,
+                    password,
+                    password_confirmation,
+                }
+                : {}),
         };
 
         await api
@@ -90,22 +100,24 @@ const Profile: React.FC = () => {
             });
     }
 
-    const handleAvatarChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            if (e.target.files) {
+                const data = new FormData();
+                data.append("avatar", e.target.files[0]);
 
-        if (e.target.files) {
-            const data = new FormData();
-            data.append("avatar", e.target.files[0])
+                api.patch("/users/avatar", data).then(response => {
+                    updateUser(response.data);
 
-            api.patch("/users/avatar", data).then(response => {
-                updateUser(response.data);
-
-                addToast({
-                    type: "success",
-                    title: "Avatar atualizado",
-                })
-            });
-        }
-    }, [updateUser, addToast])
+                    addToast({
+                        type: "success",
+                        title: "Avatar atualizado",
+                    });
+                });
+            }
+        },
+        [updateUser, addToast],
+    );
 
     return (
         <Container>
@@ -118,17 +130,19 @@ const Profile: React.FC = () => {
             </header>
 
             <Content>
-                <form
-                    onSubmit={handleSubmit<ProfileProps>(handleFormSubmit)}
-                >
+                <form onSubmit={handleSubmit<ProfileProps>(handleFormSubmit)}>
                     <AvatarInput>
                         <img src={user.avatar_url} alt="Avatar do usuario" />
                         <label htmlFor="avatar">
                             <FiCamera />
 
-                            <input type="file" name="avatar" id="avatar" onChange={handleAvatarChange} />
+                            <input
+                                type="file"
+                                name="avatar"
+                                id="avatar"
+                                onChange={handleAvatarChange}
+                            />
                         </label>
-
                     </AvatarInput>
 
                     <h1>Meu perfil</h1>
@@ -175,8 +189,6 @@ const Profile: React.FC = () => {
 
                     <Button type="submit">Confirmar mudanças</Button>
                 </form>
-
-
             </Content>
         </Container>
     );
