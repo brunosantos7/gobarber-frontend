@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { FiArrowLeft, FiLock, FiMail, FiUser } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
+import { useHistory } from "react-router-dom";
 import logoImg from "../../assets/logo.svg";
 import Button from "../../components/button";
 import Input from "../../components/input";
@@ -13,7 +14,6 @@ import api from "../../services/api";
 
 import { useToast } from "../../hooks/ToastContext";
 
-import { useHistory } from "react-router-dom";
 
 const schema = yup.object().shape({
     name: yup.string().required("Nome é um campo obrigatório."),
@@ -51,7 +51,6 @@ const SignUp: React.FC = () => {
                 });
             })
             .catch(err => {
-                console.log(err.response);
                 addToast({
                     title: "Erro ao tentar se cadastrar",
                     description: err.response.data.message
@@ -67,7 +66,7 @@ const SignUp: React.FC = () => {
             <Background />
             <Content>
                 <AnimatedContainer>
-                    <img src={logoImg} alt="Logo do aplicativo"></img>
+                    <img src={logoImg} alt="Logo do aplicativo" />
 
                     <form
                         onSubmit={handleSubmit<SignUpProps>(handleFormSubmit)}
@@ -97,7 +96,7 @@ const SignUp: React.FC = () => {
                             errors={errors}
                         />
 
-                        <Button type="submit">Entrar</Button>
+                        <Button type="submit">Cadastrar</Button>
                     </form>
 
                     <Link to="/">
