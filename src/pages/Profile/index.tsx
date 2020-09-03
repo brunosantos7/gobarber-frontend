@@ -1,15 +1,15 @@
 import { yupResolver } from "@hookform/resolvers";
-import React, { useCallback, FormEvent, ChangeEvent } from "react";
+import React, { useCallback, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
-import { FiLock, FiMail, FiUser, FiCamera, FiArrowLeft } from "react-icons/fi";
-import { useHistory, Link } from "react-router-dom";
+import { FiArrowLeft, FiCamera, FiLock, FiMail, FiUser } from "react-icons/fi";
+import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 import Button from "../../components/button";
 import Input from "../../components/input";
+import { useAuth } from "../../hooks/AuthContext";
 import { useToast } from "../../hooks/ToastContext";
 import api from "../../services/api";
-import { Container, Content, AvatarInput } from "./styles";
-import { useAuth } from "../../hooks/AuthContext";
+import { AvatarInput, Container, Content } from "./styles";
 
 const schema = yup.object().shape({
     name: yup.string().required("Nome é um campo obrigatório."),
@@ -57,14 +57,14 @@ const Profile: React.FC = () => {
 
         const { name, email, password, oldPassword, password_confirmation } = data;
 
-        const formData = Object.assign({
+        const formData = {
             email,
-            name
-        }, oldPassword ? {
-            oldPassword,
-            password,
-            password_confirmation
-        } : {});
+            name, ...(oldPassword ? {
+                oldPassword,
+                password,
+                password_confirmation
+            } : {})
+        };
 
         await api
             .put("/profile", formData)
@@ -80,7 +80,6 @@ const Profile: React.FC = () => {
                 });
             })
             .catch(err => {
-                console.log(err.response);
                 addToast({
                     title: "Erro ao tentar atualizar o seu perfil",
                     description: err.response.data.message

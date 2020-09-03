@@ -1,15 +1,17 @@
+/* eslint-disable array-callback-return */
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { FiClock, FiPower } from "react-icons/fi";
+import ptBR, { format, isAfter, isToday } from "date-fns/locale/pt-BR"
+
+import { parseISO } from "date-fns/esm";
+import { Link } from "react-router-dom";
 import logoImg from '../../assets/logo.svg';
 import { useAuth } from "../../hooks/AuthContext";
 import api from "../../services/api";
-import ptBR from "date-fns/locale/pt-BR"
-import { isToday, format, isAfter } from "date-fns"
+
 import { Appointment, Calendar, Container, Content, Header, HeaderContent, NextAppointment, Profile, Schedule, Section } from './styles';
-import { parseISO } from "date-fns/esm";
-import { Link } from "react-router-dom";
 
 
 type MonthAvailabilityItem = {
@@ -156,7 +158,7 @@ const Dashboard: React.FC = () => {
             <Content>
                 <Schedule>
                     <h1>Horários agendados</h1>
-                    <p> {isToday(selectedDate) && <span>{'Hoje'}</span>} <span>{selectedDateAsText}</span> <span>{selectedWeekDayAsText}</span></p>
+                    <p> {isToday(selectedDate) && <span>Hoje</span>} <span>{selectedDateAsText}</span> <span>{selectedWeekDayAsText}</span></p>
 
                     {isToday(selectedDate) && nextAppointment && <NextAppointment>
                         <strong>Agendamento a seguir</strong>

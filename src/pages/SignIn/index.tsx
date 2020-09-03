@@ -1,21 +1,23 @@
-import { yupResolver } from "@hookform/resolvers";
-import React, { useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { FiLock, FiLogIn, FiMail } from "react-icons/fi";
-import * as Yup from "yup";
-import logoImg from "../../assets/logo.svg";
-import Button from "../../components/button";
-import Input from "../../components/input";
-import { useAuth } from "../../hooks/AuthContext";
-import { useToast } from "../../hooks/ToastContext";
-import { Background, Container, Content, AnimatedContainer } from "./styles";
-import { Link } from "react-router-dom";
+import { yupResolver } from '@hookform/resolvers';
+import React, { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { FiLock, FiLogIn, FiMail } from 'react-icons/fi';
+import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
+import logoImg from '../../assets/logo.svg';
+import Button from '../../components/button';
+import Input from '../../components/input';
+import { useAuth } from '../../hooks/AuthContext';
+import { useToast } from '../../hooks/ToastContext';
+import {
+    Background, Container, Content, AnimatedContainer,
+} from './styles';
 
 const schema = Yup.object().shape({
     email: Yup.string()
-        .email("Entre com um email válido.")
-        .required("Email é um campo obrigatório."),
-    password: Yup.string().required("A senha é um campo obrigatório."),
+        .email('Entre com um email válido.')
+        .required('Email é um campo obrigatório.'),
+    password: Yup.string().required('A senha é um campo obrigatório.'),
 });
 
 interface FormAuthenticationData {
@@ -31,28 +33,29 @@ const SignIn: React.FC = () => {
         resolver: yupResolver(schema),
     });
 
-    const formSubmit = useCallback(async ({ email, password }) => {
-        try {
-            await signIn({ email, password });
-        } catch (err) {
-            addToast({
-                title: "Erro na autencicacao",
-                type: "error",
-                description:
-                    "Aconteceu algum erro no servidor ao tentar se conectar.",
-            });
-        }
-    }, [])
+    const formSubmit = useCallback(
+        async ({ email, password }) => {
+            try {
+                await signIn({ email, password });
+            } catch (err) {
+                addToast({
+                    title: 'Erro na autencicacao',
+                    type: 'error',
+                    description:
+                        'Aconteceu algum erro no servidor ao tentar se conectar.',
+                });
+            }
+        },
+        [addToast, signIn],
+    );
 
     return (
         <Container>
             <Content>
                 <AnimatedContainer>
-                    <img src={logoImg} alt="Logo do aplicativo"></img>
+                    <img src={logoImg} alt="Logo do aplicativo" />
 
-                    <form
-                        onSubmit={handleSubmit(formSubmit)}
-                    >
+                    <form onSubmit={handleSubmit(formSubmit)}>
                         <h1>Faça seu logon</h1>
 
                         <Input
@@ -79,7 +82,7 @@ const SignIn: React.FC = () => {
 
                     <Link to="/signup">
                         <FiLogIn />
-                        Criar conta
+              Criar conta
                     </Link>
                 </AnimatedContainer>
             </Content>
